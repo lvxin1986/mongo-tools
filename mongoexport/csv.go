@@ -86,7 +86,14 @@ func (csvExporter *CSVExportOutput) ExportDocument(document bson.D) error {
 				rowOut = append(rowOut, string(buf))
 			}
 		} else {
+			if reflect.TypeOf(fieldVal).Kind() == reflect.String {
+				v, ok := fieldVal.(string)
+				if ok {
+					fieldVal= strings.Replace(v,"\n","<br>",-1)
+				}
+			}
 			rowOut = append(rowOut, fmt.Sprintf("%v", fieldVal))
+
 		}
 	}
 	csvExporter.csvWriter.Write(rowOut)
